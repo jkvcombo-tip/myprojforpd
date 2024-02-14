@@ -1,0 +1,26 @@
+---
+- name: Collect syslog from hosts
+  hosts: all
+  become: no
+
+  tasks:
+    - name: Gather syslog files
+      fetch:
+        src: /var/log/syslog
+        dest: "{{ inventory_hostname }}_syslog"
+        flat: yes
+
+- name: Move syslog files to local directory
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Move syslog files to temporary directory
+      copy:
+        src: "{{ item }}"
+        dest: "./orgs/"
+      with_fileglob: "*.gz"
+
+    - name: Create new directory for each file and move it
+      command: mv "./orgs/{{ item | basename | regex_replace('\.gz$', '') }}" "./orgs/{{ item | basename | regex_replace('\.gz$', '') | replace('.', '_') }}"
+      with_fileglob: "./orgs/*.gz"

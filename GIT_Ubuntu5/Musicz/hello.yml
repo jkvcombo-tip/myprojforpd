@@ -1,0 +1,29 @@
+---
+- name: Collect Syslog
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Ensure syslog directory exists
+      file:
+        path: "/var/log/ansible_syslog"
+        state: directory
+
+    - name: Copy local syslog to ansible_syslog directory
+      copy:
+        src: "/var/log/syslog"
+        dest: "/var/log/ansible_syslog/{{ ansible_hostname }}_local_syslog"
+
+- name: Collect Syslog from Remote Device
+  hosts: remote_device
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Ensure syslog directory exists
+      file:
+        path: "/var/log/ansible_syslog"
+        state: directory
+
+    - name: Copy remote syslog to ansible_syslog directory
+      copy:
+        src: "/var/log/syslog"
+        dest: "/var/log/ansible_syslog/{{ inventory_hostname }}_remote_syslog"

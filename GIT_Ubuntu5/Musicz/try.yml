@@ -1,0 +1,14 @@
+---
+- name: Collect syslog from multiple machines
+  hosts: my_hosts
+  gather_facts: true
+
+  tasks:
+    - name: Fetch syslog file
+      become: false
+      command: cat /var/log/syslog
+      register: syslog_content
+
+    - name: Save syslog to local download folder
+      delegate_to: localhost
+      shell: echo "{{ syslog_content.stdout }}" > "/home/jkvcombo/Music/syslog_{{ hostvars[inventory_hostname].ansible_date_time.date }}_{{ inventory_hostname }}.log"
