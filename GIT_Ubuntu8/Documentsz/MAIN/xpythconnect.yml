@@ -1,0 +1,28 @@
+---
+- name: Create SYSLOG folder structure and Fetch/Convert syslog
+  hosts: all
+  gather_facts: false
+
+  vars:
+    main_folder_path: "./SYSLOG/"
+
+  tasks:
+    - name: Create SYSLOG folder
+      file:
+        path: "{{ main_folder_path }}"
+        state: directory
+
+    - name: Create END DEVICE folder
+      file:
+        path: "{{ main_folder_path }}/END DEVICE"
+        state: directory
+
+    - name: Create INTERM DEVICE folder
+      file:
+        path: "{{ main_folder_path }}/INTERM DEVICE"
+        state: directory
+
+    - name: Fetch and Convert syslog
+      command: "python fetch_and_convert_syslog.py"
+      args:
+        chdir: "path/to/directory/containing/python/script"

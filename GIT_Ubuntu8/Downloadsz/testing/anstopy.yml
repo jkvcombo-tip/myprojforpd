@@ -1,0 +1,31 @@
+---
+- name: Create main folder and subfolders locally
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    main_folder_path: "./SYSLOG/"
+
+  tasks:
+    - name: Create main folder
+      file:
+        path: "{{ main_folder_path }}"
+        state: directory
+
+    - name: Create END DEVICE folder
+      file:
+        path: "{{ main_folder_path }}/END DEVICE"
+        state: directory
+
+    - name: Create INTERM DEVICE folder
+      file:
+        path: "{{ main_folder_path }}/INTERM DEVICE"
+        state: directory
+    
+    - name: Copy and Convert Syslog
+      command: "python3 systocsv.py"
+      args:
+        chdir: "./"
+
+
+
